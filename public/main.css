@@ -1,0 +1,69 @@
+@import url(https://fonts.googleapis.com/css?family=Inconsolata);
+html{
+    background-color: #f1faf1;
+}
+.app-container{
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+}
+.input-form{
+  display:  flex;
+  justify-content: center;
+}
+
+.input-form select,
+.input-form button,
+.input-form input {
+  font-family: 'Inconsolata', monospace;
+  background-color: #fff;
+  border: 1px #444 solid;
+  font-size: 19px;
+  margin: 0 5px 5px 5px;
+
+  padding: 10px;
+}
+
+button{
+  height: 50px;
+}
+
+.input-form-left{
+  display: flex;
+  flex-direction: column;
+
+}
+.input-form button:disabled {
+  background-color: #fee;
+  text-decoration: line-through;
+}
+
+.ace-editor{
+  height: 100% !important;
+  max-height: 250px;
+  border: 1px #444 solid;
+  margin-left: -1px;
+}
+.error-message{
+  background-color: #fee;
+  margin: auto;
+  text-align: center;
+
+}
+.ticker {
+  padding-top: 50px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+.ticker div{
+  background-color: #fefefe;
+  width: 100%
+  border: 1px #aaa solid;
+  padding: 5px 20px;
+  margin-bottom: 5px;
+}
+.ticker div pre{
+  margin: 0;
+}
