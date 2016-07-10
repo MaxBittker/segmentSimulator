@@ -6,14 +6,13 @@ import AceEditor from 'react-ace';
 import 'brace/mode/json';
 import 'brace/theme/github';
 import _ from 'lodash';
-// sHkqMoS4MUEBJ87B3MDbs0WH9sGYzxwA
 
 const languages = [
   "node",
   "ruby",
-  "python",
-  "go",
-  "clojure"
+  // "python",
+  // "clojure"
+  // "go",
 ]
 const methods ={
 identify:
@@ -104,7 +103,7 @@ class InputForm extends React.Component {
     let tickerEntries = this.state.ticker.map((entry, i)=>
     (<div key={i}>
       <pre>{`${i} ${entry.timestamp} - ${entry.runtime} - ${entry.testType} - ${entry.writeKey} \n${entry.inputJSON}`}</pre>
-      </div>
+     </div>
     )).reverse()
 
   return (

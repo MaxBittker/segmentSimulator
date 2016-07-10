@@ -84,9 +84,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	// sHkqMoS4MUEBJ87B3MDbs0WH9sGYzxwA
-
-	var languages = ["node", "ruby", "python", "go", "clojure"];
+	var languages = ["node", "ruby"];
 	var methods = {
 	  identify: '{\n  "userId": "019mr8mf4r",\n  "traits": {\n    "name": "Michael Bolton",\n    "email": "mbolton@initech.com",\n    "plan": "Enterprise",\n    "friends": 42\n  }\n}',
 	  track: '{\n  "userId": "019mr8mf4r",\n  "event": "Purchased an Item",\n  "properties": {\n    "revenue": 39.95,\n    "shippingMethod": "2-day"\n  }\n}',
