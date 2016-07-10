@@ -6,74 +6,42 @@ import AceEditor from 'react-ace';
 import 'brace/mode/json';
 import 'brace/theme/github';
 import _ from 'lodash';
+import methods from './methodTemplates.js'
 
 const languages = [
-  "node",
-  "ruby",
-  // "python",
-  // "clojure"
-  // "go",
+  'node',
+  'ruby',
+  // 'python',
+  // 'clojure',
+  // 'go',
 ]
-const methods ={
-identify:
-`{
-  "userId": "019mr8mf4r",
-  "traits": {
-    "name": "Michael Bolton",
-    "email": "mbolton@initech.com",
-    "plan": "Enterprise",
-    "friends": 42
-  }
-}`,
-track:
-`{
-  "userId": "019mr8mf4r",
-  "event": "Purchased an Item",
-  "properties": {
-    "revenue": 39.95,
-    "shippingMethod": "2-day"
-  }
-}`,
-page:
-`{
-  "userId": "019mr8mf4r",
-  "category": "Docs",
-  "name": "Node.js Library",
-  "properties": {
-    "url": "https://segment.com/docs/libraries/node",
-    "path": "/docs/libraries/node/",
-    "title": "Node.js Library - Segment",
-    "referrer": "https://github.com/segmentio/analytics-node"
-  }
-}`,
-alias:`{
-  "previousId": "old_id",
-  "userId": "new_id"
-}`,
-group:`{
-  "userId": "019mr8mf4r",
-  "groupId": "56",
-  "traits": {
-    "name": "Initech",
-    "description": "Accounting Software"
-  }
-}`
-}
 
+//helper components
+const languageOptionComponent = lang =>
+  (<option key={lang} value={lang}> {lang} </option>)
+
+const methodOptionComponent = method =>
+  (<option key={method} value={method}>{method}</option>)
+
+const tickerEntryComponent = (entry, i) =>
+  (<div key={i}>
+    <pre>{`${i} ${entry.timestamp} - ${entry.runtime} - ${entry.testType} - ${entry.writeKey} \n${entry.inputJSON}`}</pre>
+   </div>)
 
 class InputForm extends React.Component {
   constructor(props){
       super(props);
-      this.state = {
+      this.state = { //defaults
                     errorMessage:null,
                     ticker: [],
-                    runtime: "node",
-                    testType: "identify",
+                    runtime: 'node',
+                    testType: 'identify',
                     inputJSON: methods['identify'],
-                    writeKey: "sHkqMoS4MUEBJ87B3MDbs0WH9sGYzxwA"
+                    writeKey: ''//'sHkqMoS4MUEBJ87B3MDbs0WH9sGYzxwA'
                     }
   }
   sendRequest(){
+      //send server subset of form state
       let payload = _.pick(this.state ,'runtime','testType','inputJSON','writeKey')
       Request({
             method:'POST',
@@ -81,7 +49,7 @@ class InputForm extends React.Component {
             body:payload,
             json:true
           } ,(err,res,bod)=>{
-        if(res.status===200){
+        if(res.status === 200){
           bod.timestamp = Date()
           this.setState({ ticker:this.state.ticker.concat(bod),
                           errorMessage:null})
@@ -91,30 +59,33 @@ class InputForm extends React.Component {
         if(err) console.error(err)
       })
   }
-  render() {
-    let valid = false
+  isJSONValid(){
     try {
-      valid = JSON.parse(this.state.inputJSON)
+      JSON.parse(this.state.inputJSON)
+      return true
     } catch (e){
       console.log(e)
+      return false
     }
-    let languagesOptions = languages.map(lang=>(<option key={lang} value={lang}>{lang}</option>))
-    let methodOptions = Object.keys(methods).map(method=>(<option key={method} value={method}>{method}</option>))
-    let tickerEntries = this.state.ticker.map((entry, i)=>
-    (<div key={i}>
-      <pre>{`${i} ${entry.timestamp} - ${entry.runtime} - ${entry.testType} - ${entry.writeKey} \n${entry.inputJSON}`}</pre>
-     </div>
-    )).reverse()
+    return false
+  }
+  render() {
+
+    let valid = this.isJSONValid()
+    //build component lists
+    let languagesOptions = languages.map(languageOptionComponent)
+    let methodOptions = Object.keys(methods).map(methodOptionComponent)
+    let tickerEntries = this.state.ticker.map(tickerEntryComponent).reverse()
 
   return (
-    <div className="app-container">
-      <div className="error-message">{this.state.errorMessage}</div>
-      <div className="input-form">
-        <div className="input-form-left">
+    <div className='app-container'>
+      <div className='error-message'>{this.state.errorMessage}</div>
+      <div className='input-form'>
+        <div className='input-form-left'>
           <input
-            type="text"
+            type='text'
             value={this.state.writeKey}
-            placeholder="write key"
+            placeholder='write key'
             onChange={e => this.setState({writeKey: e.target.value})
             }
             />
@@ -132,17 +103,17 @@ class InputForm extends React.Component {
           </select>
         </div>
         <AceEditor
-          className="ace-editor"
+          className='ace-editor'
           value={this.state.inputJSON}
-          mode="json"
-          theme="github"
+          mode='json'
+          theme='github'
           onChange={v=>this.setState({inputJSON: v})}
-          name="jsonEditor"
+          name='jsonEditor'
           editorProps={{$blockScrolling: Infinity}}
         />
         <button disabled={!valid} onClick={this.sendRequest.bind(this)}> send ▶</button>
       </div>
-      <div className="ticker">{tickerEntries}</div>
+      <div className='ticker'>Successful Events:{tickerEntries}</div>
     </div>
   );}
 };

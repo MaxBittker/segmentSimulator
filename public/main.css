@@ -11,6 +11,7 @@ html{
   flex-direction: column;
   align-content: flex-start;
 }
+
 .input-form{
   display:  flex;
   justify-content: center;
@@ -29,7 +30,7 @@ html{
 }
 
 button{
-  height: 50px;
+  height: 45px;
 }
 
 .input-form-left{

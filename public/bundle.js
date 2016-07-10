@@ -76,6 +76,10 @@
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
+	var _methodTemplates = __webpack_require__(185);
+
+	var _methodTemplates2 = _interopRequireDefault(_methodTemplates);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -84,13 +88,37 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var languages = ["node", "ruby"];
-	var methods = {
-	  identify: '{\n  "userId": "019mr8mf4r",\n  "traits": {\n    "name": "Michael Bolton",\n    "email": "mbolton@initech.com",\n    "plan": "Enterprise",\n    "friends": 42\n  }\n}',
-	  track: '{\n  "userId": "019mr8mf4r",\n  "event": "Purchased an Item",\n  "properties": {\n    "revenue": 39.95,\n    "shippingMethod": "2-day"\n  }\n}',
-	  page: '{\n  "userId": "019mr8mf4r",\n  "category": "Docs",\n  "name": "Node.js Library",\n  "properties": {\n    "url": "https://segment.com/docs/libraries/node",\n    "path": "/docs/libraries/node/",\n    "title": "Node.js Library - Segment",\n    "referrer": "https://github.com/segmentio/analytics-node"\n  }\n}',
-	  alias: '{\n  "previousId": "old_id",\n  "userId": "new_id"\n}',
-	  group: '{\n  "userId": "019mr8mf4r",\n  "groupId": "56",\n  "traits": {\n    "name": "Initech",\n    "description": "Accounting Software"\n  }\n}'
+	var languages = ['node', 'ruby'];
+
+	//helper components
+	var languageOptionComponent = function languageOptionComponent(lang) {
+	  return _react2.default.createElement(
+	    'option',
+	    { key: lang, value: lang },
+	    ' ',
+	    lang,
+	    ' '
+	  );
+	};
+
+	var methodOptionComponent = function methodOptionComponent(method) {
+	  return _react2.default.createElement(
+	    'option',
+	    { key: method, value: method },
+	    method
+	  );
+	};
+
+	var tickerEntryComponent = function tickerEntryComponent(entry, i) {
+	  return _react2.default.createElement(
+	    'div',
+	    { key: i },
+	    _react2.default.createElement(
+	      'pre',
+	      null,
+	      i + ' ' + entry.timestamp + ' - ' + entry.runtime + ' - ' + entry.testType + ' - ' + entry.writeKey + ' \n' + entry.inputJSON
+	    )
+	  );
 	};
 
 	var InputForm = function (_React$Component) {
@@ -101,13 +129,13 @@
 
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InputForm).call(this, props));
 
-	    _this.state = {
+	    _this.state = { //defaults
 	      errorMessage: null,
 	      ticker: [],
-	      runtime: "node",
-	      testType: "identify",
-	      inputJSON: methods['identify'],
-	      writeKey: "sHkqMoS4MUEBJ87B3MDbs0WH9sGYzxwA"
+	      runtime: 'node',
+	      testType: 'identify',
+	      inputJSON: _methodTemplates2.default['identify'],
+	      writeKey: '' //'sHkqMoS4MUEBJ87B3MDbs0WH9sGYzxwA'
 	    };
 	    return _this;
 	  }
@@ -117,6 +145,7 @@
 	    value: function sendRequest() {
 	      var _this2 = this;
 
+	      //send server subset of form state
 	      var payload = _lodash2.default.pick(this.state, 'runtime', 'testType', 'inputJSON', 'writeKey');
 	      (0, _browserRequest2.default)({
 	        method: 'POST',
@@ -135,41 +164,27 @@
 	      });
 	    }
 	  }, {
+	    key: 'isJSONValid',
+	    value: function isJSONValid() {
+	      try {
+	        JSON.parse(this.state.inputJSON);
+	        return true;
+	      } catch (e) {
+	        console.log(e);
+	        return false;
+	      }
+	      return false;
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this3 = this;
 
-	      var valid = false;
-	      try {
-	        valid = JSON.parse(this.state.inputJSON);
-	      } catch (e) {
-	        console.log(e);
-	      }
-	      var languagesOptions = languages.map(function (lang) {
-	        return _react2.default.createElement(
-	          'option',
-	          { key: lang, value: lang },
-	          lang
-	        );
-	      });
-	      var methodOptions = Object.keys(methods).map(function (method) {
-	        return _react2.default.createElement(
-	          'option',
-	          { key: method, value: method },
-	          method
-	        );
-	      });
-	      var tickerEntries = this.state.ticker.map(function (entry, i) {
-	        return _react2.default.createElement(
-	          'div',
-	          { key: i },
-	          _react2.default.createElement(
-	            'pre',
-	            null,
-	            i + ' ' + entry.timestamp + ' - ' + entry.runtime + ' - ' + entry.testType + ' - ' + entry.writeKey + ' \n' + entry.inputJSON
-	          )
-	        );
-	      }).reverse();
+	      var valid = this.isJSONValid();
+	      //build component lists
+	      var languagesOptions = languages.map(languageOptionComponent);
+	      var methodOptions = Object.keys(_methodTemplates2.default).map(methodOptionComponent);
+	      var tickerEntries = this.state.ticker.map(tickerEntryComponent).reverse();
 
 	      return _react2.default.createElement(
 	        'div',
@@ -208,7 +223,7 @@
 	                value: this.state.testType,
 	                onChange: function onChange(e) {
 	                  return _this3.setState({ testType: e.target.value,
-	                    inputJSON: methods[e.target.value] });
+	                    inputJSON: _methodTemplates2.default[e.target.value] });
 	                } },
 	              methodOptions
 	            )
@@ -233,6 +248,7 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'ticker' },
+	          'Successful Events:',
 	          tickerEntries
 	        )
 	      );
@@ -60003,6 +60019,25 @@
 	}.call(this));
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(180)(module), (function() { return this; }())))
+
+/***/ },
+/* 185 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var methods = {
+	  identify: "{\n  \"userId\": \"019mr8mf4r\",\n  \"traits\": {\n    \"name\": \"Michael Bolton\",\n    \"email\": \"mbolton@initech.com\",\n    \"plan\": \"Enterprise\",\n    \"friends\": 42\n  }\n}",
+	  track: "{\n  \"userId\": \"019mr8mf4r\",\n  \"event\": \"Purchased an Item\",\n  \"properties\": {\n    \"revenue\": 39.95,\n    \"shippingMethod\": \"2-day\"\n  }\n}",
+	  page: "{\n  \"userId\": \"019mr8mf4r\",\n  \"category\": \"Docs\",\n  \"name\": \"Node.js Library\",\n  \"properties\": {\n    \"url\": \"https://segment.com/docs/libraries/node\",\n    \"path\": \"/docs/libraries/node/\",\n    \"title\": \"Node.js Library - Segment\",\n    \"referrer\": \"https://github.com/segmentio/analytics-node\"\n  }\n}",
+	  alias: "{\n  \"previousId\": \"old_id\",\n  \"userId\": \"new_id\"\n}",
+	  group: "{\n  \"userId\": \"019mr8mf4r\",\n  \"groupId\": \"56\",\n  \"traits\": {\n    \"name\": \"Initech\",\n    \"description\": \"Accounting Software\"\n  }\n}"
+	};
+
+	exports.default = methods;
 
 /***/ }
 /******/ ]);
