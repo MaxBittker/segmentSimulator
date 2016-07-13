@@ -41,6 +41,17 @@ group:`{
     "name": "Initech",
     "description": "Accounting Software"
   }
+}`,
+page:`{
+  "userId": "019mr8mf4r",
+  "category": "Docs",
+  "name": "Node.js Library",
+  "properties": {
+    "url": "https://segment.com/docs/libraries/node",
+    "path": "/docs/libraries/node/",
+    "title": "Node.js Library - Segment",
+    "referrer": "https://github.com/segmentio/analytics-node"
+  }
 }`
 }
 

@@ -60064,13 +60064,16 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var methods = {
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	var methods = _defineProperty({
 	  identify: "{\n  \"userId\": \"019mr8mf4r\",\n  \"traits\": {\n    \"name\": \"Michael Bolton\",\n    \"email\": \"mbolton@initech.com\",\n    \"plan\": \"Enterprise\",\n    \"friends\": 42\n  }\n}",
 	  track: "{\n  \"userId\": \"019mr8mf4r\",\n  \"event\": \"Purchased an Item\",\n  \"properties\": {\n    \"revenue\": 39.95,\n    \"shippingMethod\": \"2-day\"\n  }\n}",
 	  page: "{\n  \"userId\": \"019mr8mf4r\",\n  \"category\": \"Docs\",\n  \"name\": \"Node.js Library\",\n  \"properties\": {\n    \"url\": \"https://segment.com/docs/libraries/node\",\n    \"path\": \"/docs/libraries/node/\",\n    \"title\": \"Node.js Library - Segment\",\n    \"referrer\": \"https://github.com/segmentio/analytics-node\"\n  }\n}",
 	  alias: "{\n  \"previousId\": \"old_id\",\n  \"userId\": \"new_id\"\n}",
 	  group: "{\n  \"userId\": \"019mr8mf4r\",\n  \"groupId\": \"56\",\n  \"traits\": {\n    \"name\": \"Initech\",\n    \"description\": \"Accounting Software\"\n  }\n}"
-	};
+	}, "page", "{\n  \"userId\": \"019mr8mf4r\",\n  \"category\": \"Docs\",\n  \"name\": \"Node.js Library\",\n  \"properties\": {\n    \"url\": \"https://segment.com/docs/libraries/node\",\n    \"path\": \"/docs/libraries/node/\",\n    \"title\": \"Node.js Library - Segment\",\n    \"referrer\": \"https://github.com/segmentio/analytics-node\"\n  }\n}");
 
 	exports.default = methods;
 
