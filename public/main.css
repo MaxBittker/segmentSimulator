@@ -89,6 +89,9 @@ button {
   color: #fff;
 
 }
+.submit:active{
+  background-color: #48bA48 !important;
+}
 
 
 .input-form button:disabled {
