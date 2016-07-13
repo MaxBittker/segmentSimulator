@@ -20,8 +20,8 @@ const languages = [
 const languageOptionComponent = lang =>
   (<option key={lang} value={lang}> {lang} </option>)
 
-const methodOptionComponent = method =>
-  (<option key={method} value={method}>{method}</option>)
+const methodButtonComponent = (method, activeMethod, methodClicked ) =>
+  (<button key={method} className={method===activeMethod && "active"} value={method} onClick={methodClicked}>{method}</button>)
 
 const tickerEntryComponent = (entry, i) =>
   (<div key={i}>
@@ -74,34 +74,39 @@ class InputForm extends React.Component {
     let valid = this.isJSONValid()
     //build component lists
     let languagesOptions = languages.map(languageOptionComponent)
-    let methodOptions = Object.keys(methods).map(methodOptionComponent)
-    let tickerEntries = this.state.ticker.map(tickerEntryComponent).reverse()
+    let methodButtons = Object.keys(methods).map(method=>
+      methodButtonComponent(method, this.state.testType, ()=>
+      {this.setState({testType: method, inputJSON: methods[method]})}
+    ))
 
+    let tickerEntries = this.state.ticker.map(tickerEntryComponent).reverse()
   return (
     <div className='app-container'>
-      <div className='error-message'>{this.state.errorMessage}</div>
+      <h1> Analytics Simulator </h1>
+      <h4> Simulate an API call from any* Segment library.</h4>
       <div className='input-form'>
-        <div className='input-form-left'>
+        <div className='input-card'>
           <input
             type='text'
             value={this.state.writeKey}
-            placeholder='write key'
+            placeholder='Write Key'
             onChange={e => this.setState({writeKey: e.target.value})
             }
             />
+        </div>
+        <div className='input-card col'>
+          <p> Which Library?</p>
           <select
             value={this.state.runtime}
             onChange={e => this.setState({runtime: e.target.value})
             }>
             {languagesOptions}
           </select>
-          <select
-            value= {this.state.testType}
-            onChange={e => this.setState({testType: e.target.value,
-                                          inputJSON: methods[e.target.value]})}>
-          {methodOptions}
-          </select>
         </div>
+        <div className='input-card'>
+          {methodButtons}
+        </div>
+        <div className='input-card col'>
         <AceEditor
           className='ace-editor'
           value={this.state.inputJSON}
@@ -111,9 +116,19 @@ class InputForm extends React.Component {
           name='jsonEditor'
           editorProps={{$blockScrolling: Infinity}}
         />
-        <button disabled={!valid} onClick={this.sendRequest.bind(this)}> send ▶</button>
+
+      <button disabled={!valid} className="submit" onClick={this.sendRequest.bind(this)}> simulate</button>
+      <div className='error-message'><h4>{this.state.errorMessage}</h4></div>
+        </div>
       </div>
-      <div className='ticker'>Successful Events:{tickerEntries}</div>
+
+      <div className='ticker'>
+        <h4>
+          Successful Events:
+        </h4>
+        {tickerEntries}
+      </div>
+      <h4>*a few</h4>
     </div>
   );}
 };

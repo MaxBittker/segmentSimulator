@@ -101,10 +101,10 @@
 	  );
 	};
 
-	var methodOptionComponent = function methodOptionComponent(method) {
+	var methodButtonComponent = function methodButtonComponent(method, activeMethod, methodClicked) {
 	  return _react2.default.createElement(
-	    'option',
-	    { key: method, value: method },
+	    'button',
+	    { key: method, className: method === activeMethod && "active", value: method, onClick: methodClicked },
 	    method
 	  );
 	};
@@ -183,31 +183,49 @@
 	      var valid = this.isJSONValid();
 	      //build component lists
 	      var languagesOptions = languages.map(languageOptionComponent);
-	      var methodOptions = Object.keys(_methodTemplates2.default).map(methodOptionComponent);
-	      var tickerEntries = this.state.ticker.map(tickerEntryComponent).reverse();
+	      var methodButtons = Object.keys(_methodTemplates2.default).map(function (method) {
+	        return methodButtonComponent(method, _this3.state.testType, function () {
+	          _this3.setState({ testType: method, inputJSON: _methodTemplates2.default[method] });
+	        });
+	      });
 
+	      var tickerEntries = this.state.ticker.map(tickerEntryComponent).reverse();
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'app-container' },
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'error-message' },
-	          this.state.errorMessage
+	          'h1',
+	          null,
+	          ' Analytics Simulator '
+	        ),
+	        _react2.default.createElement(
+	          'h4',
+	          null,
+	          ' Simulate an API call from any* Segment library.'
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'input-form' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'input-form-left' },
+	            { className: 'input-card' },
 	            _react2.default.createElement('input', {
 	              type: 'text',
 	              value: this.state.writeKey,
-	              placeholder: 'write key',
+	              placeholder: 'Write Key',
 	              onChange: function onChange(e) {
 	                return _this3.setState({ writeKey: e.target.value });
 	              }
-	            }),
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'input-card col' },
+	            _react2.default.createElement(
+	              'p',
+	              null,
+	              ' Which Library?'
+	            ),
 	            _react2.default.createElement(
 	              'select',
 	              {
@@ -216,40 +234,57 @@
 	                  return _this3.setState({ runtime: e.target.value });
 	                } },
 	              languagesOptions
-	            ),
-	            _react2.default.createElement(
-	              'select',
-	              {
-	                value: this.state.testType,
-	                onChange: function onChange(e) {
-	                  return _this3.setState({ testType: e.target.value,
-	                    inputJSON: _methodTemplates2.default[e.target.value] });
-	                } },
-	              methodOptions
 	            )
 	          ),
-	          _react2.default.createElement(_reactAce2.default, {
-	            className: 'ace-editor',
-	            value: this.state.inputJSON,
-	            mode: 'json',
-	            theme: 'github',
-	            onChange: function onChange(v) {
-	              return _this3.setState({ inputJSON: v });
-	            },
-	            name: 'jsonEditor',
-	            editorProps: { $blockScrolling: Infinity }
-	          }),
 	          _react2.default.createElement(
-	            'button',
-	            { disabled: !valid, onClick: this.sendRequest.bind(this) },
-	            ' send ▶'
+	            'div',
+	            { className: 'input-card' },
+	            methodButtons
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'input-card col' },
+	            _react2.default.createElement(_reactAce2.default, {
+	              className: 'ace-editor',
+	              value: this.state.inputJSON,
+	              mode: 'json',
+	              theme: 'github',
+	              onChange: function onChange(v) {
+	                return _this3.setState({ inputJSON: v });
+	              },
+	              name: 'jsonEditor',
+	              editorProps: { $blockScrolling: Infinity }
+	            }),
+	            _react2.default.createElement(
+	              'button',
+	              { disabled: !valid, className: 'submit', onClick: this.sendRequest.bind(this) },
+	              ' simulate'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'error-message' },
+	              _react2.default.createElement(
+	                'h4',
+	                null,
+	                this.state.errorMessage
+	              )
+	            )
 	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'ticker' },
-	          'Successful Events:',
+	          _react2.default.createElement(
+	            'h4',
+	            null,
+	            'Successful Events:'
+	          ),
 	          tickerEntries
+	        ),
+	        _react2.default.createElement(
+	          'h4',
+	          null,
+	          '*a few'
 	        )
 	      );
 	    }
